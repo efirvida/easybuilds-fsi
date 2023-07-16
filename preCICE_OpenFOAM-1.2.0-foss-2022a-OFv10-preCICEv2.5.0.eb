@@ -1,0 +1,45 @@
+easyblock = 'ConfigureMake'
+
+name = 'preCICE_OpenFOAM'
+version = '1.2.0'
+versionsuffix = '-OFv10-preCICEv2.5.0'
+
+
+homepage = 'https://www.precice.org/adapter-openfoam-overview.html'
+description = """This preCICE adapter is a plug-in (function object) for OpenFOAM,
+which can work with any recent version of OpenFOAM.
+
+It supports fluid-structure interaction (fluid part),
+conjugate heat transfer (fluid and solid parts),
+and fluid-fluid simulations, while it is also easily extensible.
+"""
+
+toolchain = {'name': 'foss', 'version': '2022a'}
+toolchainopts = {'cstd': 'c++11', 'usempi': True}
+
+source_urls = ['https://github.com/precice/openfoam-adapter/releases/download/v%(version)s/']
+sources = ['openfoam-adapter_v%(version)s_OpenFOAM10_experimental.tar.gz']
+
+# checksums = ['9d2d8d372b39c4e672e6311e92545d335c52c8eb3cefea34a794572523583aa5']
+# source_urls = ['https://github.com/precice/openfoam-adapter/archive/']
+# sources = ['v%(version)s.tar.gz']
+# checksums = ['9d2d8d372b39c4e672e6311e92545d335c52c8eb3cefea34a794572523583aa5']
+
+dependencies = [
+    ("OpenFOAM", "10"),
+    ("preCICE", "2.5.0", "-Python-3.10.4"),
+    ('pkg-config', '0.29.2'),
+]
+
+skipsteps = ['configure', 'build']
+install_cmd = ". $FOAM_BASH && "
+install_cmd += "chmod +x ./Allwmake && "
+install_cmd += "sed -i s'|${FOAM_USER_LIBBIN:-}|%(installdir)s/lib|' Allwmake && "
+install_cmd += "./Allwmake -j 4"
+
+sanity_check_paths = {
+    'files': ["lib/libpreciceAdapterFunctionObject.%s" % SHLIB_EXT],
+    'dirs': ["lib"]
+}
+
+moduleclass = 'cae'

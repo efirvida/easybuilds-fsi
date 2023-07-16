@@ -1,0 +1,60 @@
+##
+# Author:    Robert Mijakovic <robert.mijakovic@lxp.lu>
+# Author:    Jasper Grimm (UoY)
+##
+name = 'PETSc'
+version = '3.17.4'
+
+homepage = 'https://www.mcs.anl.gov/petsc'
+description = """PETSc, pronounced PET-see (the S is silent), is a suite of data structures and routines for the
+ scalable (parallel) solution of scientific applications modeled by partial differential equations."""
+
+toolchain = {'name': 'foss', 'version': '2022a'}
+toolchainopts = {'openmp': True, 'usempi': True, 'pic': True}
+
+source_urls = [
+    'https://ftp.mcs.anl.gov/pub/petsc/release-snapshots/',
+    'ftp://ftp.mcs.anl.gov/pub/petsc/release-snapshots/',
+]
+sources = [SOURCELOWER_TAR_GZ]
+patches = [
+    'PETSc_ranlib-fix.patch',
+]
+checksums = [
+    '99c127486722a3ffd95a268b4ceb0976cbf217926c681a9631bd7246eab8cb2a',  # petsc-3.17.4.tar.gz
+    '64cf9d5008d5e92117e65bdec5316d991b6a6b8c8ecf7ea46eb790a498266297',  # PETSc_ranlib-fix.patch
+]
+
+builddependencies = [
+    ('Bison', '3.8.2'),
+    ('Boost', '1.79.0'),
+    ('CMake', '3.23.1'),
+    ('flex', '2.6.4'),
+    ('Python', '3.10.4'),
+    ('SciPy-bundle', '2022.05'),
+    ('SuiteSparse', '5.13.0', '-METIS-5.1.0'),
+    ('SuperLU_DIST', '8.1.0'),
+    ('SuperLU', '5.3.0'),
+    ('Valgrind', '3.20.0'),
+]
+
+
+# external packages that are downloaded with --download-<package>=1 and --download-<package>-static=1
+download_deps_static = [
+    'hdf5'
+    'hypre',
+    'metis',
+    'ml',
+    'mumps',
+    'parmetis',
+    'prometheus',
+    'ptscotch',
+    'scalapack',
+]
+
+# triangle cannot be downloaded with --download-triangle-static because it fails
+download_deps = ['triangle']
+
+shared_libs = True
+
+moduleclass = 'numlib'
